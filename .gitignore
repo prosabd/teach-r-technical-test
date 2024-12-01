@@ -1,0 +1,24 @@
+# Ignore OSX files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ignore Visual Studio Code files
+.vscode/
+
+# Ignore other files
+/mcd
+/mcd.png
+/usecase.png
+
+# Ignore frontend and backend editor files
+/backend/.vscode/
+/frontend/.vscode/
+
+# Ignore Dumps Directory
+/dumps
+/backend/dumps
+
+# Ignore Local Resources Directory
+/local_resources
+/local_resources/*
