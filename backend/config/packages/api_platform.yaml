@@ -1,6 +1,10 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
+    show_webby: true
+    eager_loading:
+        max_joins: 100
+        force_eager: false
     defaults:
         stateless: true
         cache_headers:

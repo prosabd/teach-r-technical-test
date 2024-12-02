@@ -6,30 +6,40 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']]
+  )]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
-
+    
     #[ORM\Column(length: 255)]
+    #[Groups(['read', 'write'])]
     private ?string $nom = null;
-
+    
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read', 'write'])]
     private ?string $description = null;
-
+    
     #[ORM\Column]
+    #[Groups(['read', 'write'])]
     private ?float $prix = null;
-
+    
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['read'])]
     private ?\DateTimeInterface $dateCreation = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'produits', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read', 'write'])]
     private ?Category $categorie = null;
 
     public function getId(): ?int

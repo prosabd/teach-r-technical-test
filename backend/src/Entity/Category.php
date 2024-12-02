@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource()]
@@ -15,12 +16,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read', 'write'])]
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Product::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read'])]
     private Collection $produits;
 
     public function __construct()

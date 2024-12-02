@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { Link, useNavigate } from "react-router";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Product from '../models/Product';
-const API_URL = import.meta.env.VITE_API_URL;
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from '@/store/productSlice';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
