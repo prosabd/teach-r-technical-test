@@ -1,49 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Product from '../models/Product';
 const API_URL = import.meta.env.VITE_API_URL;
+import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from '@/store/productSlice';
 
 const Home: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state: any) => state.products);
   const navigate = useNavigate();
-
-  const getRandomProducts = (array: Product[], count: number) => {
-    const limitedArray = array.slice(0, 20);
-    const shuffled = [...limitedArray].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
 
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchProducts = async () => {
       try {
-        setLoading(true);
+        dispatch(fetchProductsStart());
         const response = await axios.get<Product[]>(API_URL + `/products`, {
           signal: controller.signal,
         });
         const productData = response.data["member"] || [];
-        setProducts(getRandomProducts(productData, 3));
-        setError(null);
+        dispatch(fetchProductsSuccess(getRandomProducts(productData, 3)));
       } catch (err) {
         if (!axios.isCancel(err)) {
-          setError("Failed to fetch products");
-          console.error(err);
+          dispatch(fetchProductsFailure("Failed to fetch products"));
         }
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchProducts();
 
     return () => controller.abort();
-  }, []);
+  }, [dispatch]);
+
+  const getRandomProducts = (array: Product[], count: number) => {
+    const limitedArray = array.slice(0, 20);
+    const shuffled = [...limitedArray].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
@@ -55,7 +52,7 @@ const Home: React.FC = () => {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {products.map((product) => (
+        {products.map((product: Product) => (
           <Link key={product.id} to={`/products/detail/${product.id}`}>
             <Card key={product.id} className="overflow-hidden">
               <CardHeader className="p-0">
