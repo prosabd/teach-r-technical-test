@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\ProductRepository;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ApiResource()]
 class Product
 {
     #[ORM\Id]
@@ -26,7 +28,7 @@ class Product
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
 
-    #[ORM\OneToOne(inversedBy: 'produits', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'produits', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $categorie = null;
 

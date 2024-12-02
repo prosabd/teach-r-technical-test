@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource()]
 class Category
 {
     #[ORM\Id]
@@ -16,8 +20,13 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToOne(mappedBy: 'categorie', cascade: ['persist', 'remove'])]
-    private ?Product $produits = null;
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Product::class, cascade: ['persist', 'remove'])]
+    private Collection $produits;
+
+    public function __construct()
+    {
+        $this->produits = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -36,20 +45,30 @@ class Category
         return $this;
     }
 
-    public function getProduits(): ?Product
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProduits(): Collection
     {
         return $this->produits;
     }
 
-    public function setProduits(Product $produits): static
+    public function addProduit(Product $produit): static
     {
-        // set the owning side of the relation if necessary
-        if ($produits->getCategorie() !== $this) {
-            $produits->setCategorie($this);
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->setCategorie($this);
         }
+        return $this;
+    }
 
-        $this->produits = $produits;
-
+    public function removeProduit(Product $produit): static
+    {
+        if ($this->produits->removeElement($produit)) {
+            if ($produit->getCategorie() === $this) {
+                $produit->setCategorie(null);
+            }
+        }
         return $this;
     }
 }

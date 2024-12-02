@@ -1,4 +1,4 @@
-# Teach'r Full-Stack Developer Test - November/December 2024
+# Teach'r Full-Stack Developer Technical Test
 
 ## Project Overview
 
@@ -25,12 +25,18 @@ This project is designed to demonstrate full-stack development skills using **Re
     # Edit .env.local with your database credentials
     
     vim .env.local
-4. **Generate JWT keys:**
+5. **Create DB and run migrations:**
+    ```bash
+    php bin/console doctrine:database:create
+    php bin/console doctrine:migrations:migrate
+    mysql -u root -P 3306 teachR < teachR.sql
+5. **Generate JWT keys:**
     ```bash
     php bin/console lexik:jwt:generate-keypair
-5. **Run Symfony Server:**
+6. **Run Symfony Server:**
     ```bash
     symfony server:start -d
+    ```
 
 ### Frontend
 
@@ -43,8 +49,28 @@ This project is designed to demonstrate full-stack development skills using **Re
 3. **Run the development server:**
     ```bash
     npm run dev # or bun run dev
+    ```
 
-## Running Tests
+## Additional Information
+**Backend API documentation is available at:** http://localhost:8000/api/docs
+
+**Frontend application:** http://localhost:3000
+
+**Default admin credentials:**   
+
+    Email: admin@teach-r.com
+
+    Password: password123
+
+### Protected Actions
+**Only authenticated admin users can:**
+
+    - Edit products
+    - Delete products
+    - Create new products
+
+
+## Running Tests (not Working)
 **Backend Test:**
 ```bash
 # Run PHPUnit tests
