@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
+use ApiPlatform\Serializer\Filter\GroupFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -13,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']]
   )]
+#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact'])]
 class Product
 {
     #[ORM\Id]
@@ -37,10 +41,10 @@ class Product
     #[Groups(['read'])]
     private ?\DateTimeInterface $dateCreation = null;
     
-    #[ORM\ManyToOne(inversedBy: 'produits', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'produits', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['read', 'write'])]
-    private ?Category $categorie = null;
+    private ?Category $categorie;
 
     public function getId(): ?int
     {

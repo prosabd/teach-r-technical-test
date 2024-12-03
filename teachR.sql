@@ -38,7 +38,7 @@ CREATE TABLE product (
 
 -- Insert admin user (password is hashed version of 'password123')
 INSERT INTO user (email, roles, password) VALUES 
-('admin@teach-r.com', '["ROLE_ADMIN","ROLE_USER"]', '$2y$13$ZI3mwRu4Y.WAzVfMmh6kpuMNV5s.oVYI2qIKtQ2S.wUxf9tkMaP7O');
+('admin@teach-r.com', '["ROLE_ADMIN","ROLE_USER"]', '$2y$13$SeFoUdJwsmSe7BqRAwYa6e92lDRqkEFdfcmEV.QAE0ASU.LiJzCcu');
 
 -- Insert sample categories
 INSERT INTO category (nom) VALUES 

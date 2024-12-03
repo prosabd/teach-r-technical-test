@@ -23,8 +23,11 @@ class Category
     #[Groups(['read', 'write'])]
     private ?string $nom = null;
 
+    /**
+     * @var Collection<int, Product>
+     */
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Product::class, cascade: ['persist', 'remove'])]
-    #[Groups(['read'])]
+    // #[Groups(['read'])]
     private Collection $produits;
 
     public function __construct()

@@ -18,7 +18,6 @@ const Navbar: React.FC = () => {
             try {
                 dispatch(fetchCategoriesStart());
                 const response = await axios.get<Category[]>(API_URL + `/categories`);
-                console.log(response.data);
                 dispatch(fetchCategoriesSuccess(response.data["member"]));
             } catch (error) {
                 if (axios.isAxiosError(error)) {
@@ -32,7 +31,7 @@ const Navbar: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <div className="flex flex-col min-h-10">
+        <div className="flex flex-col min-h-10 w-screen pt-6 pb-10">
             <div className="fixed top-0 left-0 right-0 z-50 h-16 bg-background border-b border-border">
                 <div className="container mx-auto h-full">
                     <div className="flex justify-between items-center h-full px-4">

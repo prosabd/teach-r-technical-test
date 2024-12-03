@@ -60,7 +60,7 @@ This project is designed to demonstrate full-stack development skills using **Re
 
     Email: admin@teach-r.com
 
-    Password: password123
+    Password: password
 
 ### Protected Actions
 **Only authenticated admin users can:**

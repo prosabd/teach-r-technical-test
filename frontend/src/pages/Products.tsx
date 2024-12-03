@@ -20,7 +20,8 @@ const Home: React.FC = () => {
   const [searchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1");
   // Page part
-  const [products, loading, error] = useSelector((state: any) => state.products);
+  const { products, loading, error } = useSelector((state: any) => state.products);
+  const [response, setResponse] = useState<any | null>(null);
   const [order, setOrder] = useState("asc");
 
   const fetchProducts = async (pageNumber: number) => {
@@ -29,44 +30,38 @@ const Home: React.FC = () => {
       dispatch(fetchProductsStart());
       dispatch(fetchCategoriesStart());
       // Fetch category details by name to render all products or filtered by category
-      let url;
+      let url = API_URL + `/products?page=${pageNumber}`;
       if (categoryParam) {
         // Fetch category details by name
         const categoryResponse = await axios.get<Category[]>(API_URL + `/categories`);
-        // console.log(categoryResponse.data);
         const category = categoryResponse.data["member"].filter(
-          (category) => category.name === categoryParam
+            (category) => category.nom.toLowerCase() === categoryParam.toLowerCase()
         );
-        // console.log(category[0].id);
         if (!category) throw new Error("Category not found");
-
+        
         // Fetch products with the category ID
-        url = API_URL + `/products?category=/api/categories/${category[0].id}&page=${pageNumber}`;
+        url += `&categorie=/api/categories/${category[0].id}`;
         dispatch(fetchCategoriesSuccess(categoryResponse.data["member"]));
-      } else {
-        // Fetch products without filtering by category
-        url = API_URL + `/products?page=${pageNumber}`;
       }
 
       const response = await axios.get<Product[]>(url, {
         signal: controller.signal,
       });
-      console.log(response);
+      setResponse(response);
       let productData = response.data["member"] || [];
-
+      
       //Set category name on product objects
       productData = await Promise.all(
-        productData.map(async (product: Product) => {
-          const categoryName = product.categorie.name;
-          return { ...product, category: categoryName };
-        })
-      );
-
-      setProducts(productData);
-      dispatch(fetchProductsSuccess(productData));
+          productData.map(async (product: Product) => {
+              const categoryName = product.categorie.name;
+              return { ...product, category: categoryName };
+            })
+        );
+        
+        dispatch(fetchProductsSuccess(productData));
     } catch (err) {
-      if (!axios.isCancel(err)) {
-        dispatch(fetchProductsFailure("Failed to fetch products"));
+        if (!axios.isCancel(err)) {
+            dispatch(fetchProductsFailure("Failed to fetch products"));
       }
     }
   };
@@ -109,11 +104,10 @@ const Home: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* // Sort element by name (or order value selected) and display them */}
           {Array.isArray(products) &&
-            products
-              .sort((a, b) =>
+            [...products].sort((a, b) =>
                 order === "asc"
-                  ? a.name.localeCompare(b.name)
-                  : b.name.localeCompare(a.name)
+                  ? a.nom.localeCompare(b.nom)
+                  : b.nom.localeCompare(a.nom)
               )
               .map((product) => (
                 <Link key={product.id} to={`/products/detail/${product.id}`}>
@@ -122,30 +116,32 @@ const Home: React.FC = () => {
                       <img
                         // Let's check if the item is a basic item and its photo exists on the server, or if it is a user-created item and its photo exists in the public/user_assets/products_images folder
                         src={
-                          "https://github.com/prosabd/zoo-symfony-react/releases/download/0.0.0/" +
-                          product.name.replace(" ", "_") +
-                          ".jpg"
-                            ? "https://github.com/prosabd/zoo-symfony-react/releases/download/0.0.0/" +
-                              product.name.replace(" ", "_") +
-                              ".jpg"
+                          "https://github.com/prosabd/teach-r-technical-test/releases/download/image-base/" +
+                          product.nom
+                            .replace(/&/g, '.') // Replace '&' with '.'
+                            .replace(/ /g, '_') + ".jpg"
+                            ? "https://github.com/prosabd/teach-r-technical-test/releases/download/image-base/" +
+                              product.nom
+                                .replace(/&/g, '.') // Replace '&' with '.'
+                                .replace(/ /g, '_') + ".jpg"
                             : "@/public/user_assets/products_images/" +
-                              product.name.replace(" ", "_") +
+                              product.nom.replace(" ", "_") +
                               ".{" +
                               ["jpg", "png", "jpeg"].join("|") +
                               "}"
                         }
-                        alt={product.name}
+                        alt={product.nom}
                         className="w-full h-48 object-cover"
                       />
                     </CardHeader>
                     <CardContent className="p-4">
                       <CardTitle className="text-xl mb-2">
-                        {product.name}
+                        {product.nom}
                       </CardTitle>
                       <CardDescription>{product.description}</CardDescription>
                       {!categoryParam && (
                         <p className="text-sm text-muted-foreground mt-2">
-                          Category: {product.category}
+                          Category: {product.categorie.nom}
                         </p>
                       )}
                     </CardContent>
@@ -165,9 +161,9 @@ const Home: React.FC = () => {
           onClick={handleNextPage}
           //verify if the current page is the last page, if it is, disable the next button
           disabled={
-            response?.data?.["hydra:view"]?.["hydra:last"]
-              ? response?.data?.["hydra:view"]?.["@id"] ===
-                response?.data?.["hydra:view"]?.["hydra:last"]
+            response?.data?.["view"]?.["last"]
+              ? response?.data?.["view"]?.["@id"] ===
+                response?.data?.["view"]?.["last"]
               : true
           }
         >

@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router';
 import { Routes, Route } from 'react-router';
 import Navbar from "@/components/Navbar";
 import Home from "@/pages/Home";
+import Login from "@/pages/Login";
 import Products from "@/pages/Products";
 import NotFound from "@/pages/NotFound";
 
@@ -13,7 +14,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" />
+          <Route path="/login" element={<Login />} />
           <Route path="/products">
             <Route index element={<Products />} /> {/* Shows all products */}
             <Route path=":category" element={<Products />} /> {/* Shows products by categories */}
