@@ -41,7 +41,7 @@ class Product
     #[Groups(['read'])]
     private ?\DateTimeInterface $dateCreation = null;
     
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'produits', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?Category $categorie;
