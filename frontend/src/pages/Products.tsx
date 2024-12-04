@@ -6,10 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react"
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from '@/store/productSlice';
 import { fetchCategoriesStart, fetchCategoriesSuccess } from '@/store/categorySlice';
+import { verifyToken } from '@/utils/userInstance';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Home: React.FC = () => {
@@ -83,7 +85,14 @@ const Home: React.FC = () => {
     return () => {};
   }, [page, categoryParam, order]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return ( 
+        <Button disabled>
+            <Loader2 className="animate-spin" />
+            Please wait
+        </Button>
+    )
+  }
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
@@ -101,6 +110,10 @@ const Home: React.FC = () => {
             </SelectContent>
           </Select>
         </div>
+        {verifyToken().isValid && verifyToken().isAdmin && (
+            <Button className="w-48 mx-auto p-4 my-2">Add Product</Button>
+          )
+        }
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* // Sort element by name (or order value selected) and display them */}
           {Array.isArray(products) &&
@@ -108,8 +121,7 @@ const Home: React.FC = () => {
                 order === "asc"
                   ? a.nom.localeCompare(b.nom)
                   : b.nom.localeCompare(a.nom)
-              )
-              .map((product) => (
+              ).map((product) => (
                 <Link key={product.id} to={`/products/detail/${product.id}`}>
                   <Card key={product.id} className="overflow-hidden">
                     <CardHeader className="p-0">
@@ -144,6 +156,16 @@ const Home: React.FC = () => {
                           Category: {product.categorie.nom}
                         </p>
                       )}
+                      { verifyToken().isValid && verifyToken().isAdmin && 
+                        <div className="items-center space-x-2 pt-3">
+                          <Button variant="secondary" size="sm">
+                              Edit
+                          </Button>
+                          <Button variant="destructive" size="sm">
+                              Delete
+                          </Button>
+                        </div>
+                      }
                     </CardContent>
                   </Card>
                 </Link>

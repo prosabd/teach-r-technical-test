@@ -6,37 +6,46 @@ import { jwtDecode } from 'jwt-decode';
 const API_URL = import.meta.env.VITE_API_URL;
 
 /// Set the user Token from cookies
-let lastTokenCheck = { token: '', isValid: false, checkedAt: 0 };
-// Function to verify the token
+let lastTokenCheck = { token: '', isValid: false, isAdmin: false,  checkedAt: 0 };
+// Function to verify the token and check if it's an admin
 export const verifyToken = () => {
   const currentToken = Cookies.get('token');
   const currentTime = Date.now() / 1000;
 
   // If the token hasn't changed and it was checked within the last minute, return the cached result
   if (lastTokenCheck.token === currentToken && currentTime - lastTokenCheck.checkedAt < 60) {
-    return lastTokenCheck.isValid;
+    return lastTokenCheck;
   }
 
   if (!currentToken || currentToken === '') {
-    lastTokenCheck = { token: currentToken || '', isValid: false, checkedAt: currentTime };
-    return false;
+    lastTokenCheck = { token: currentToken || '', isValid: false, isAdmin: false, checkedAt: currentTime };
+    return lastTokenCheck;
   }
 
   try {
     const decodedToken = jwtDecode(currentToken);
     const isTokenValid = decodedToken.exp > currentTime;
+    let isAdmin = false;
+
+    if (decodedToken.roles) {
+      // Check if the token contains roles and if one of them is 'admin' or similar
+      isAdmin = (decodedToken.roles as string[]).some(role => role.toUpperCase() === 'ROLE_ADMIN');
+    }
 
     if (!isTokenValid) {
       Cookies.remove('token');
     }
     
-    lastTokenCheck = { token: currentToken, isValid: isTokenValid, checkedAt: currentTime };
-    return isTokenValid;
+    lastTokenCheck = { token: currentToken, isValid: isTokenValid, isAdmin: isAdmin, checkedAt: currentTime };
+    return lastTokenCheck;
   } catch (error) {
-    return false;
+    return { token: currentToken || '', isValid: false, isAdmin: false, checkedAt: currentTime };
   }
 };
 
+export const logout = () => {
+  Cookies.remove('token');
+};
 
 // Create an Axios instance with a base URL 
 const instance: AxiosInstance = axios.create({

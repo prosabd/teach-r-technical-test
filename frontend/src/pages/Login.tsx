@@ -14,11 +14,12 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorLogin, setErrorLogin] = useState("");
+  const { isValid } = verifyToken();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if the user is already logged in
-    if (verifyToken()) {
+    if (isValid) {
         navigate("/products");
         return;
     }

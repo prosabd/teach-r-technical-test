@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown } from "lucide-react";
 import Category from '@/models/Category';
 import { fetchCategoriesStart, fetchCategoriesSuccess, fetchCategoriesFailure } from '@/store/categorySlice';
+import { verifyToken, logout} from '@/utils/userInstance';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Navbar: React.FC = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { categories } = useSelector((state: any) => state.categories);
 
     React.useEffect(() => {
@@ -29,6 +31,11 @@ const Navbar: React.FC = () => {
 
         fetchData();
     }, [dispatch]);
+
+    const logOut = () => {
+        logout();
+        navigate("/products");
+      };
 
     return (
         <div className="flex flex-col min-h-10 w-screen pt-6 pb-10">
@@ -71,11 +78,24 @@ const Navbar: React.FC = () => {
                         </div>
 
                         <div className="flex items-center">
-                            <Link to="/login">
-                                <Button variant="outline" size="default">
-                                    Connect (Crud actions)
+                          {verifyToken().isValid ?
+                              (
+                              <div className='flex space-x-3'>
+                                <Button variant="destructive" size="default" onClick={logOut}>
+                                    Disconnect
                                 </Button>
-                            </Link>
+                                <Button variant="outline" size="default" disabled>
+                                    Hi Admin
+                                </Button>
+                              </div>
+                           ):(
+                              <Link to="/login">
+                                  <Button variant="outline" size="default">
+                                      Connect (Crud actions)
+                                  </Button>
+                              </Link>
+                           )
+                          }
                         </div>
                     </div>
                 </div>
