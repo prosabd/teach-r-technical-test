@@ -9,6 +9,9 @@ This project is designed to demonstrate full-stack development skills using **Re
 - **Backend:** Develop a RESTful API to manage products and categories, including basic CRUD operations and JWT authentication for secured actions.
 - **Frontend:** Build a user interface to interact with this API, showcasing data management, state management with Redux, and UI design with TailwindCSS.
 
+![image](https://github.com/prosabd/teach-r-technical-test/releases/download/README/home.png)
+![image](https://github.com/prosabd/teach-r-technical-test/releases/download/README/products.jpeg)
+
 ## Installation
 
 ### Backend
@@ -62,6 +65,8 @@ This project is designed to demonstrate full-stack development skills using **Re
 
     Password: password
 
+![image](https://github.com/prosabd/teach-r-technical-test/releases/download/README/login.png)
+
 ### Protected Actions
 **Only authenticated admin users can:**
 
@@ -69,6 +74,7 @@ This project is designed to demonstrate full-stack development skills using **Re
     - Delete products
     - Create new products
 
+![image](https://github.com/prosabd/teach-r-technical-test/releases/download/README/form-module.jpeg)
 
 ## Running Tests (not Working)
 **Backend Test:**
