@@ -15,7 +15,7 @@ import { fetchCategoriesStart, fetchCategoriesSuccess } from '@/store/categorySl
 import instance, { verifyToken } from '@/utils/userInstance';
 const API_URL = import.meta.env.VITE_API_URL;
 
-const Home: React.FC = () => {
+const Products: React.FC = () => {
   const dispatch = useDispatch();
   // Browser settings part
   const { category: categoryParam } = useParams();
@@ -84,16 +84,18 @@ const Home: React.FC = () => {
     navigate(`${baseUrl}?page=${previousPage}`);
   };
 
+  const handleProductUpdated = () => {
+    fetchProducts(page); // Fetch products when a product is added or updated
+  }
+
   const handleAddProduct = () => {
     setSelectedProduct(undefined);
     setIsModalOpen(true);
-    fetchProducts(page);
   };
 
   const handleEditProduct = (product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
-    fetchProducts(page);
   };
 
   const handleDeleteProduct = async (productId: number) => {
@@ -186,6 +188,7 @@ const Home: React.FC = () => {
                         {product.nom}
                         </CardTitle>
                       </Link>
+                      <CardTitle className="text-base mb-2">{product.prix}$</CardTitle>
                       <CardDescription>{product.description}</CardDescription>
                       {!categoryParam && (
                         <p className="text-sm text-muted-foreground mt-2">
@@ -207,7 +210,7 @@ const Home: React.FC = () => {
                     </CardContent>
                   </Card>
               ))}
-            <ProductForm open={isModalOpen} onClose={handleCloseModal} product={selectedProduct} />
+            <ProductForm open={isModalOpen} onClose={handleCloseModal} product={selectedProduct} onProductUpdated={handleProductUpdated}/>
         </div>
         <Button
           className="mt-4 mx-2 "
@@ -234,4 +237,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Products;

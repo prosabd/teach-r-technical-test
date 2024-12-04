@@ -22,13 +22,24 @@ interface ProductFormProps {
   open: boolean;
   onClose: () => void;
   product?: Product;
+  onProductUpdated: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product, onProductUpdated }) => {
   const products = useSelector((state: any) => state.products);
   const { categories, loading, error } = useSelector((state: any) => state.categories);
-  const [formData, setFormData] = useState<Product>(product || { 
-    id: products.length + 1, nom: '', description: '', prix: 0, dateCreation: new Date(), categorie: { id: 0, nom: '', description: '' } });
+  const [formData, setFormData] = useState<Product>({ 
+    id: product?.id || products.length + 1, 
+    nom: product?.nom || '', 
+    description: product?.description || '', 
+    prix: product?.prix || 0, 
+    dateCreation: product?.dateCreation || new Date(), 
+    categorie: { 
+      id: product?.categorie.id ||0, 
+      nom: product?.categorie.nom || '', 
+      description: product?.categorie.description || '', 
+    } 
+  });
   const dispatch = useDispatch();
 
   const handleCategoryChange = (value: string) => {
@@ -54,7 +65,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product }) => 
       } else {
         await instance.post(`${API_URL}/products/new`, productData);
       }
-      
+
+      onProductUpdated();
       onClose();
     } catch (error) {
       // error
@@ -81,7 +93,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product }) => 
   
   useEffect(() => {
       fetchCategories();
-  }, []);
+      if (product) {
+        setFormData({
+          ...product,
+          categorie: product.categorie || { id: 0, nom: '', description: '' }
+        });
+      }
+  }, [product]);
   
   if (loading) {
     return (
@@ -147,6 +165,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product }) => 
           fullWidth
           value={formData.prix}
           onChange={(e) => setFormData({ ...formData, prix: parseFloat(e.target.value) })}
+          InputProps={{ inputProps: { min: 0 } }}
           />
         <Label htmlFor="category">Category</Label>
         <Select onValueChange={handleCategoryChange} value={formData.categorie.id.toString()}>
