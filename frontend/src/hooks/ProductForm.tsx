@@ -98,6 +98,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ open, onClose, product, onPro
           ...product,
           categorie: product.categorie || { id: 0, nom: '', description: '' }
         });
+      } else {
+        setFormData({
+          id: products.length + 1,
+          nom: '',
+          description: '',
+          prix: 0,
+          dateCreation: new Date(),
+          categorie: { id: 0, nom: '', description: '' }
+        });
       }
   }, [product]);
   
