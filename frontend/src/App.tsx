@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Products from "@/pages/Products";
+import ProductDetail from './pages/ProductDetail';
 import NotFound from "@/pages/NotFound";
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
           <Route path="/products">
             <Route index element={<Products />} /> {/* Shows all products */}
             <Route path=":category" element={<Products />} /> {/* Shows products by categories */}
-            {/* <Route path="detail/:id" element={<ProductDetail />} />  */}
+            <Route path="detail/:id" element={<ProductDetail />} /> 
           </Route>
           <Route path="*" element={<NotFound />} /> {/* Catch all unmatched routes */}
         </Routes>
