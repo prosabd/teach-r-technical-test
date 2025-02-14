@@ -6,7 +6,8 @@ import { jwtDecode } from 'jwt-decode';
 const API_URL = import.meta.env.VITE_API_URL;
 
 /// Set the user Token from cookies
-let lastTokenCheck = { token: '', isValid: false, isAdmin: false,  checkedAt: 0 };
+let lastTokenCheck: { token: string; isValid: boolean; isAdmin: boolean; checkedAt: number; username?: string } 
+                  = { token: '', isValid: false, isAdmin: false, checkedAt: 0, username: '' };
 // Function to verify the token and check if it's an admin
 export const verifyToken = () => {
   const currentToken = Cookies.get('token');
@@ -26,17 +27,22 @@ export const verifyToken = () => {
     const decodedToken = jwtDecode(currentToken);
     const isTokenValid = decodedToken.exp > currentTime;
     let isAdmin = false;
+    let username = null;
 
     if (decodedToken.roles) {
       // Check if the token contains roles and if one of them is 'admin' or similar
       isAdmin = (decodedToken.roles as string[]).some(role => role.toUpperCase() === 'ROLE_ADMIN');
     }
 
+    if (decodedToken.username) {
+      // Extract username before @ symbol
+      username = decodedToken.username.split('@')[0];
+    }
     if (!isTokenValid) {
       Cookies.remove('token');
     }
     
-    lastTokenCheck = { token: currentToken, isValid: isTokenValid, isAdmin: isAdmin, checkedAt: currentTime };
+    lastTokenCheck = { token: currentToken, isValid: isTokenValid, isAdmin: isAdmin, checkedAt: currentTime, username: username };
     return lastTokenCheck;
   } catch (error) {
     return { token: currentToken || '', isValid: false, isAdmin: false, checkedAt: currentTime };
