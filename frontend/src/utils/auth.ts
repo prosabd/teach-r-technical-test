@@ -12,3 +12,8 @@ export const login = async (email: string, password: string) => {
   );
   return response.data;
 };
+
+export const authenticatedRequest = axios.create({
+  baseURL: API_URL || 'http://localhost:8000/api', // Fallback URL
+  withCredentials: true  // Important for sending cookies with requests
+});

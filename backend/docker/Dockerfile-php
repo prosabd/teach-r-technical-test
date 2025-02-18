@@ -36,7 +36,7 @@ RUN usermod -u 1000 www-data
 RUN usermod -a -G www-data root
 RUN mkdir -p /var/www/html
 RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 777 /var/www/html/public
+RUN chmod -R 777 /var/www/html
 RUN mkdir -p /var/www/.composer
 RUN chown -R www-data:www-data /var/www/.composer
 
