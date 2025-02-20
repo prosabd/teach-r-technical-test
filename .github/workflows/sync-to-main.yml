@@ -1,0 +1,40 @@
+name: Sync dev to main
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "prosabd"
+        git config --global user.email ${{ secrets.MAIL_SECRET }}
+
+    - name: Checkout main branch
+      run: |
+        git checkout main || git checkout --orphan main
+
+    - name: Sync dev to main
+      run: |
+        # Merge changes from dev to main, keeping main-specific files
+        git merge --strategy=ours --no-commit dev
+        
+        # Checkout files from dev, excluding docker-compose.yml and ./backend/docker/
+        git checkout dev -- . ':!docker-compose.yml' ':!backend/docker/' ':!backend/Dockerfile'
+        
+        # Stage the changes
+        git add .
+        
+        # Commit and push the changes
+        git commit -m "Sync dev to main, excluding docker-compose.yml and ./backend/docker/ and ./backend/Dockerfile"
+        git push origin main

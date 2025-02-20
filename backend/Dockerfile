@@ -9,8 +9,6 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip \
-    supervisor \
-    nginx \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -33,9 +31,7 @@ RUN composer install --prefer-dist --no-scripts --no-autoloader && rm -rf /root/
 RUN composer dump-autoload --optimize
 
 # Copy configuration files
-COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Create the storage directory
 RUN mkdir -p /var/www/html/storage
