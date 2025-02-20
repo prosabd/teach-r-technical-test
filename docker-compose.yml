@@ -23,7 +23,7 @@ services:
       - NODE_ENV=production
     # command: ["npm", "start"]
     ports:
-      - "3000:3000"
+      - "3001:3001"
     networks:
       - teach-r-network
       - shared-network
@@ -37,7 +37,7 @@ services:
     volumes:
       - ./backend:/var/www/html
     ports:
-      - "9000:9000"
+      - "9001:9001"
     depends_on:
       - backend 
     networks:

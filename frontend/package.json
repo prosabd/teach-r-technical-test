@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite --port 3001",
     "build": "vite build",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "npx vite preview",
-    "scan": "vite --port 3000 & npx react-scan@latest localhost:3000"
+    "scan": "vite --port 3001 & npx react-scan@latest localhost:3001"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
