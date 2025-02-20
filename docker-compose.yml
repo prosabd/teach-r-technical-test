@@ -8,9 +8,9 @@ services:
       - ./backend/vendor:/var/www/html/vendor:delegated
     environment:
       - APP_ENV=dev
-      - DATABASE_URL=mysql://root:@db:3306/teachR
+      - DATABASE_URL=mysql://root:@db:3306/teach-r
     networks:
-      - teachR-network
+      - teach-r-network
 
   frontend:
     build:
@@ -24,7 +24,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - teachR-network
+      - teach-r-network
 
   nginx:
     build:
@@ -40,18 +40,18 @@ services:
       - frontend
       - fpm
     networks:
-      - teachR-network
+      - teach-r-network
 
   fpm:
     build:
       context: ./backend/docker
       dockerfile: Dockerfile-php
-    environment: 
-      - DATABASE_URL=mysql://root:@db:3306/teachR
+    environment:
+      - DATABASE_URL=mysql://root:@db:3306/teach-r
     volumes:
       - ./backend:/var/www/html
     networks:
-      - teachR-network
+      - teach-r-network
     depends_on:
       - db
 
@@ -59,18 +59,18 @@ services:
     image: mysql:8.0
     environment:
       # - MYSQL_ROOT_HOST=%
-      - MYSQL_DATABASE=teachR
+      - MYSQL_DATABASE=teach-r
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
-      - teachR-network
+      - teach-r-network
 
 volumes:
   mysql_data:
 
 networks:
-  teachR-network:
+  teach-r-network:
     driver: bridge

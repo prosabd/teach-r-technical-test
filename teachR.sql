@@ -3,9 +3,9 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- Create and select database
-DROP DATABASE IF EXISTS `teachR`;
-CREATE DATABASE IF NOT EXISTS `teachR`;
-USE `teachR`;
+DROP DATABASE IF EXISTS `teach-r`;
+CREATE DATABASE IF NOT EXISTS `teach-r`;
+USE `teach-r`;
 
 -- Drop tables in correct order
 DROP TABLE IF EXISTS `product`;
