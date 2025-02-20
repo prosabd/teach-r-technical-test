@@ -22,3 +22,10 @@
 # Ignore Local Resources Directory
 /local_resources
 /local_resources/*
+
+# Ignores the .env file
+.env
+.env.local
+
+# Ignore sql data files
+*.sql

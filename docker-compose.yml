@@ -6,7 +6,7 @@ services:
     volumes:
       - ./backend:/var/www/html:cached
     environment:
-      - APP_ENV=production
+      - APP_ENV=prod
       - DATABASE_URL=${DATABASE_URL}
     networks:
       - teach-r-network
@@ -20,7 +20,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=prod
     # command: ["npm", "start"]
     ports:
       - "3001:3001"
