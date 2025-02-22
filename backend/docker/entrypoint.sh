@@ -5,6 +5,7 @@ echo "Installing Composer dependencies..."
 composer install -vvv --prefer-dist --no-scripts --no-autoloader
 
 echo "Running database migrations..."
+php bin/console doctrine:database:drop --if-exists --force
 php bin/console doctrine:database:create --if-not-exists --connection=default
 php bin/console doctrine:migrations:migrate -n
 
