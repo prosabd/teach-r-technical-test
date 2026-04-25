@@ -18,5 +18,6 @@ export default defineConfig({
   preview: {
     host: true,
     port: 3003,
+    allowedHosts: ['teach-r.prosabd.dev'],
   },
 })
