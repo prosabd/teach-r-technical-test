@@ -39,8 +39,8 @@ RUN mkdir -p /var/www/html/storage
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/
 
-# Expose port 9001 and start php-fpm server
-EXPOSE 9001
+# Expose port 8003 and start php-fpm server
+EXPOSE 8003
 
 # Entrypoint script for migrations and jwt 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
