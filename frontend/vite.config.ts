@@ -13,10 +13,10 @@ export default defineConfig({
     outDir: 'dist',
   },
   server: {
-    port: 3001,
+    port: 3003,
   },
   preview: {
     host: true,
-    port: 3001,
+    port: 3003,
   },
 })
