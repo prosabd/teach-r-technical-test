@@ -13,6 +13,9 @@ COPY . .
 #    COPY --chown=node:node . .
 ##
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # RUN npm run type-check
 RUN npm run build
 

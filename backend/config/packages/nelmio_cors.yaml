@@ -10,7 +10,7 @@ nelmio_cors:
     paths:
         '^/': null
         '^/api/':
-            allow_origin: ['*']
+            allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
             allow_headers: ['*']
             allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'PATCH', 'OPTIONS']
             allow_credentials: true
