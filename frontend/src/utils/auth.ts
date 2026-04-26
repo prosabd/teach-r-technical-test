@@ -1,19 +1,20 @@
 import axios from 'axios';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 if (!API_URL) {
-  console.error('API_URL environment variable is not defined');
+  throw new Error('VITE_API_URL is not defined. Set it in .env.production (or pass as a Docker build-arg) before building.');
 }
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post(`${API_URL}/login`, 
+  const response = await axios.post(`${API_URL}/login`,
     { email, password },
-    { withCredentials: true }  // Important for handling cookies
+    { withCredentials: true }
   );
   return response.data;
 };
 
 export const authenticatedRequest = axios.create({
-  baseURL: API_URL || 'http://localhost:8000/api', // Fallback URL
-  withCredentials: true  // Important for sending cookies with requests
+  baseURL: API_URL,
+  withCredentials: true
 });
