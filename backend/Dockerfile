@@ -39,6 +39,9 @@ RUN mkdir -p /var/www/html/storage
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/
 
+ARG CORS_ALLOW_ORIGIN
+ENV CORS_ALLOW_ORIGIN=$CORS_ALLOW_ORIGIN
+
 # Expose port 8003 and start php-fpm server
 EXPOSE 8003
 
